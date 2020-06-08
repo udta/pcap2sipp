@@ -42,6 +42,10 @@
 #define SIP_IDENTIFYER "sip"
 #define ETHERNET_LEN 14
 #define LINUX_COOKED_LEN 16
+#define INJECTION "injection.csv"
+#define SCENARIO  "scenario.xml"
+#define SCRIPT    "run.sh"
+#define RTP       "rtp.pcap"
 
 /* Ethernet header */
 typedef struct ethernet_header
@@ -127,16 +131,22 @@ int sdp_millisecs=0;
 int datalink;
 ip_node *ip_addresses;
 string_node *callids;
-FILE *scenario_file;
+FILE *scenario_file = NULL;
+FILE *script_file = NULL;
 char *prefix = "/home/";
 int datalink_length;
 int i_am_initiator=0;
+char curr_cid[256] = {0};
+char curr_cseq[128] = {0};
+char curr_method[32] = {0};
 char* peer_tag_param="[peer_tag_param]";
 char* call_number="[call_number]";
-char *injection_file_path="/tmp/sipp_injection.csv";
-char *scenario_file_path="/tmp/sipp_scenario.xml";
-char *rtp_file_path="/tmp/rtp.pcap";
+char injection_file_path[256] = {0};
+char scenario_file_path[256]  = {0};
+char script_file_path[256]    = {0};
+char rtp_file_path[256]       = {0};
 int this_is_first_request=1;
+int need_remote_number = 0;/*是否会发Invite出去给远端号码*/
 char* last_reply;
 
 #endif /* PCAP2SIPP_H_ */

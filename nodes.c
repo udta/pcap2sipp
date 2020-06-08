@@ -27,93 +27,120 @@
 #include "nodes.h"
 #include <stdlib.h>
 
-int add_ipnodes(ip_node **node, ip_address address){
-	ip_node *newnode=*node;
-	if (newnode==NULL) {
-		newnode=malloc(sizeof(ip_node));
-		*node=newnode;
-	}
-	else{
-		if (newnode->next!=NULL)
-			while (newnode->next!=NULL){
-				newnode=newnode->next;
-			}
-		newnode->next=malloc(sizeof(ip_node));
-		newnode = newnode->next;
-	}
-	newnode->addr.byte1=address.byte1;
-	newnode->addr.byte2=address.byte2;
-	newnode->addr.byte3=address.byte3;
-	newnode->addr.byte4=address.byte4;
-	newnode->next=NULL;
-	return 0;
+int add_ipnodes( ip_node **node, ip_address address, u_short port )
+{
+    ip_node *newnode = *node;
+    if ( newnode == NULL )
+    {
+        newnode = malloc( sizeof(ip_node) );
+        *node = newnode;
+    }
+    else
+    {
+        if ( newnode->next != NULL )
+            while ( newnode->next != NULL )
+            {
+                newnode = newnode->next;
+            }
+        newnode->next = malloc( sizeof(ip_node) );
+        newnode = newnode->next;
+    }
+    newnode->addr.byte1 = address.byte1;
+    newnode->addr.byte2 = address.byte2;
+    newnode->addr.byte3 = address.byte3;
+    newnode->addr.byte4 = address.byte4;
+    newnode->port = port;
+    newnode->next = NULL;
+    return 0;
 }
 
-int print_ipnodes(ip_node *node){
-	ip_node *newnode=node;
-	while (newnode!=NULL){
-		printf("%d.%d.%d.%d \n",
-			newnode->addr.byte1,
-			newnode->addr.byte2,
-			newnode->addr.byte3,
-			newnode->addr.byte4);
-		newnode=newnode->next;
-	}
-	return 0;
+int print_ipnodes( ip_node *node )
+{
+    ip_node *newnode = node;
+    while ( newnode != NULL )
+    {
+        printf( "%d.%d.%d.%d:%d \n",
+                newnode->addr.byte1,
+                newnode->addr.byte2,
+                newnode->addr.byte3,
+                newnode->addr.byte4,
+                newnode->port );
+        newnode = newnode->next;
+    }
+    return 0;
 }
 
-int in_ipnodelist(ip_node *node, ip_address address){
-	ip_node *newnode=node;
-	while (newnode!=NULL){
-		if ((newnode->addr.byte1==address.byte1)
-				&& (newnode->addr.byte2==address.byte2)
-				&& (newnode->addr.byte3==address.byte3)
-				&& (newnode->addr.byte4==address.byte4))
-			return 1;
-		newnode=newnode->next;
-	}
-	return 0;
+int in_ipnodelist( ip_node *node, ip_address address, u_short port )
+{
+    ip_node *newnode = node;
+    while ( newnode != NULL )
+    {
+        if ( (newnode->addr.byte1 == address.byte1)
+             && (newnode->addr.byte2 == address.byte2)
+             && (newnode->addr.byte3 == address.byte3)
+             && (newnode->addr.byte4 == address.byte4)
+             && (newnode->port == port) )
+            return 1;
+        newnode = newnode->next;
+    }
+    return 0;
 }
 
 
-int add_stringnodes(string_node **node, char *address){
-	string_node *newnode=*node;
-	if (newnode==NULL) {
-		newnode=malloc(sizeof(string_node));
-		*node=newnode;
-	}
-	else{
-		if (newnode->next!=NULL)
-			while (newnode->next!=NULL){
-				newnode=newnode->next;
-			}
-		newnode->next=malloc(sizeof(string_node));
-		newnode = newnode->next;
-	}
-	newnode->contents=malloc(sizeof(char)*strlen(address));
+int add_stringnodes( string_node **node, char *address )
+{
+    string_node *newnode = *node;
+    if ( newnode == NULL )
+    {
+        newnode = malloc( sizeof(string_node) );
+        *node = newnode;
+    }
+    else
+    {
+        if ( newnode->next != NULL )
+            while ( newnode->next != NULL )
+            {
+                newnode = newnode->next;
+            }
+        newnode->next = malloc( sizeof(string_node) );
+        newnode = newnode->next;
+    }
+    newnode->contents = malloc( sizeof(char) * strlen( address ) );
 
-	strcpy(newnode->contents,address);
+    strcpy( newnode->contents, address );
 
-	newnode->next=NULL;
-	return 0;
+    newnode->next = NULL;
+    return 0;
 }
 
-int print_stringnodes(string_node *node){
-	string_node *newnode=node;
-	while (newnode!=NULL){
-		printf("%s \n",
-			newnode->contents);
-		newnode=newnode->next;
-	}
-	return 0;
+int print_stringnodes( string_node *node )
+{
+    string_node *newnode = node;
+    int writed = 0;
+    while ( newnode != NULL )
+    {
+        if ( writed == 0 )
+        {
+            printf( "%s", newnode->contents );
+			writed = 1;
+        }
+        else
+        {
+            printf( ",%s", newnode->contents );
+		}
+        newnode = newnode->next;
+    }
+    return 0;
 }
 
-int in_stringlist(string_node *node, char* address){
-	string_node *newnode=node;
-	while (newnode!=NULL){
-		if ((strcmp(newnode->contents,address))==0)
-			return 1;
-		newnode=newnode->next;
-	}
-	return 0;
+int in_stringlist( string_node *node, char *address )
+{
+    string_node *newnode = node;
+    while ( newnode != NULL )
+    {
+        if ( (strcmp( newnode->contents, address )) == 0 )
+            return 1;
+        newnode = newnode->next;
+    }
+    return 0;
 }

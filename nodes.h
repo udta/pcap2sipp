@@ -41,6 +41,7 @@ typedef struct ip_address{
 
 typedef struct ip_node{
 	ip_address addr;
+	u_short port;
 	struct ip_node *next;
 } ip_node;
 
@@ -49,9 +50,9 @@ typedef struct string_node{
 	struct string_node *next;
 } string_node;
 
-int add_ipnodes(ip_node **, ip_address);
+int add_ipnodes(ip_node **, ip_address, u_short port);
 int print_ipnodes(ip_node *);
-int in_ipnodelist(ip_node *, ip_address);
+int in_ipnodelist(ip_node *, ip_address, u_short port);
 
 int add_stringnodes(string_node **, char*);
 int print_stringnodes(string_node *);
